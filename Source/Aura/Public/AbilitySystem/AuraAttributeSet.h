@@ -7,6 +7,14 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAttributeSet.generated.h"
 
+/**
+ * 属性访问器（ATTRIBUTE_ACCESSORS）：
+ * 1.获取属性（GAMEPLAYATTRIBUTE_PROPERTY_GETTER）
+ * 2.获取属性值（GAMEPLAYATTRIBUTE_VALUE_GETTER）
+ * 3.修改属性值（GAMEPLAYATTRIBUTE_VALUE_SETTER）
+ * 4.初始化属性值（GAMEPLAYATTRIBUTE_VALUE_INITTER）
+ */
+
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
@@ -32,11 +40,15 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes");
 	FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxHealth)
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Vital Attributes");
 	FGameplayAttributeData Mana;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Mana)
+
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Vital Attributes");
 	FGameplayAttributeData MaxMana;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana)
 
 public:
 	UFUNCTION()
