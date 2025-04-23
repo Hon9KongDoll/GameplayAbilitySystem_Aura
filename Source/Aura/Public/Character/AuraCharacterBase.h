@@ -14,4 +14,11 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> LeftWeapon;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> RightWeapon;
 };
