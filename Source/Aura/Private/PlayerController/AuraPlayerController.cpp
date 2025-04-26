@@ -1,4 +1,5 @@
 #include "PlayerController/AuraPlayerController.h"
+#include "Interface/EnemyInterface.h"
 
 // Engine
 #include "EnhancedInputSubsystems.h"
@@ -7,6 +8,26 @@
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
+}
+
+void AAuraPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	bShowMouseCursor = true;
+	DefaultMouseCursor = EMouseCursor::Default;
+
+	FInputModeGameAndUI InputModeGameAndUI;
+	InputModeGameAndUI.SetHideCursorDuringCapture(false);
+	InputModeGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(InputModeGameAndUI);
 }
 
 void AAuraPlayerController::SetupInputComponent()
@@ -38,5 +59,41 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	{
 		ControllerPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
 		ControllerPawn->AddMovementInput(RightDirection, MovementVector.X);
+	}
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult HitResult;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
+
+	if (!HitResult.bBlockingHit) return;
+
+	LastEnemyActor = ThisEnemyActor;
+	ThisEnemyActor = Cast<IEnemyInterface>(HitResult.GetActor());
+
+	if (LastEnemyActor == nullptr)
+	{
+		if (ThisEnemyActor == nullptr) {}
+		else
+		{
+			ThisEnemyActor->HighLightActor();
+		}
+	}
+	else
+	{
+		if (ThisEnemyActor == nullptr)
+		{
+			LastEnemyActor->UnHighLightActor();
+		}
+		else
+		{
+			if (LastEnemyActor == ThisEnemyActor) {}
+			else
+			{
+				LastEnemyActor->UnHighLightActor();
+				ThisEnemyActor->HighLightActor();
+			}
+		}
 	}
 }
