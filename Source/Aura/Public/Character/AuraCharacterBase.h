@@ -4,7 +4,7 @@
 #include "GameFramework/Character.h"
 #include "AuraCharacterBase.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class AURA_API AAuraCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
