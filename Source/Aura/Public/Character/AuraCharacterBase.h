@@ -12,10 +12,6 @@ class AURA_API AAuraCharacterBase : public ACharacter
 public:
 	AAuraCharacterBase();
 
-	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 protected:
 	virtual void BeginPlay() override;
 };
