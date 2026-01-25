@@ -4,7 +4,9 @@
 #include "GameFramework/Character.h"
 #include "AuraCharacterBase.generated.h"
 
-UCLASS()
+class USkeletalMeshComponent;
+
+UCLASS(Abstract)
 class AURA_API AAuraCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
@@ -14,4 +16,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Gear")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
 };
