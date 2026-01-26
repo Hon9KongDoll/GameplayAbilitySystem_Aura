@@ -2,10 +2,11 @@
 
 //Engine
 #include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
-	bReplicates = true;
+	bReplicates = true; 
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -29,4 +30,40 @@ void AAuraPlayerController::BeginPlay()
 	InputMoceGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock); // 设置鼠标锁定到窗口模式
 	InputMoceGameAndUI.SetHideCursorDuringCapture(false); // 当窗口捕捉到光标不隐藏
 	SetInputMode(InputMoceGameAndUI);
+}
+
+void AAuraPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	// 使用的增强输入将输入组件获取
+	// 该转换如果失败触发断言
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+	
+	// 绑定输入动作到函数
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+}
+
+void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
+{
+	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
+
+	const FRotator Rotator = GetControlRotation();
+
+	// 控制器的旋转跟随玩家的视角,因此需要设置旋转和朝向
+	// 根据控制器Yaw创建新的旋转
+	const FRotator YawRotation{ 0, Rotator.Yaw, 0 };
+
+	// FRotationMatrix类是旋转构造的旋转矩阵,通过矩阵可以将旋转应用于向量,以便在3D空间中将其旋转
+	// GetUnitAxis用于获取旋转矩阵对应轴的向量
+	const FVector ForwardDirction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	//在控制的pawn上应用输入移动
+	if (auto ControlledPawn = GetPawn())
+	{
+		ControlledPawn->AddMovementInput(ForwardDirction, InputAxisVector.Y);
+		//输入中X是水平轴AD
+		ControlledPawn->AddMovementInput(RightDirction, InputAxisVector.X);
+	}
 }
