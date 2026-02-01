@@ -17,6 +17,4 @@ public:
 	virtual void UnHighLightAcrot() override;
 
 public:
-	UPROPERTY(BlueprintReadOnly)
-	uint8 bHighLight : 1;
 };
