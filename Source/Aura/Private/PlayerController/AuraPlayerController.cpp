@@ -1,4 +1,5 @@
 #include "PlayerController/AuraPlayerController.h"
+#include "Interface/EnemyInterface.h"
 
 //Engine
 #include "EnhancedInputSubsystems.h"
@@ -7,6 +8,13 @@
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true; 
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -42,6 +50,69 @@ void AAuraPlayerController::SetupInputComponent()
 	
 	// 绑定输入动作到函数
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorResult;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, CursorResult);
+	if (!CursorResult.bBlockingHit) return;
+
+	LastActor = ThisActor;
+	ThisActor = Cast<IEnemyInterface>(CursorResult.GetActor());
+
+	/**
+	 * 从鼠标光标位置进行射线检测（Line Trace），可能出现以下几种情况：
+	 *
+	 * A. LastActor 为空，且 ThisActor 为空
+	 *    - 不做任何处理
+	 *
+	 * B. LastActor 为空，且 ThisActor 有效
+	 *    - 高亮显示 ThisActor
+	 *
+	 * C. LastActor 有效，且 ThisActor 为空
+	 *    - 取消高亮显示 LastActor
+	 *
+	 * D. 两个 Actor 都有效，但 LastActor != ThisActor
+	 *    - 取消高亮显示 LastActor，并高亮显示 ThisActor
+	 *
+	 * E. 两个 Actor 都有效，且是同一个 Actor
+	 *    - 不做任何处理
+	 */
+
+	if (LastActor == nullptr)
+	{
+		if (ThisActor == nullptr)
+		{
+			// A.不做任何处理
+		}
+		else
+		{
+			// B.高亮显示ThisActor
+			ThisActor->HighLightAcrot();
+		}
+	}
+	else
+	{
+		if (ThisActor == nullptr)
+		{
+			// C.取消高亮显示LastActor
+			LastActor->UnHighLightAcrot();
+		}
+		else
+		{
+			if (ThisActor == LastActor)
+			{
+				// E.不做任何处理
+			}
+			else
+			{
+				// D.取消高亮显示LastActor，并高亮显示ThisActor
+				LastActor->UnHighLightAcrot();
+				ThisActor->HighLightAcrot();
+			}
+		}
+	}
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
