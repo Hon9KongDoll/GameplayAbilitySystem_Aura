@@ -1,9 +1,7 @@
 #include "Character/AuraEnemy.h"
 #include "Aura/Aura.h"
-
-//Engine
-#include "AbilitySystemComponent.h"
-#include "AttributeSet.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 
 AAuraEnemy::AAuraEnemy()
 {
