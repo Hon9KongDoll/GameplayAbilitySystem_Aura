@@ -39,6 +39,10 @@ protected:
 	TObjectPtr<UInputMappingContext> AuraContext;
 
 private:
+	// ÔÝÊ±±àÒë²»¹ý
+	// TObjectPtr<IEnemyInterface> LastActor;
+	// TObjectPtr<IEnemyInterface> ThisActor;
+
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
 };
