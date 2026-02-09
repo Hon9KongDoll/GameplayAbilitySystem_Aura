@@ -1,8 +1,6 @@
 #include "HUD/AuraHUD.h"
-#include "UserWidget/WidgetController/OverlayWidgetController.cpp"
-
-//Engine
 #include "UserWidget/Widget/AuraUserWidget.h"
+#include "UserWidget/WidgetController/OverlayWidgetController.h"
 
 UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -28,6 +26,8 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	FWidgetControllerParams WCParams(PC, PS, ASC, AS);
 
 	OverlapWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
+
+	OverlayWidgetController->BroadcastInitialValues();
 
 	OverlapWidget->AddToViewport();
 }
