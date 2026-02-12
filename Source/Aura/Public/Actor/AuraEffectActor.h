@@ -15,10 +15,13 @@ public:
 	AAuraEffectActor();
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "GameplayEffect")
+	UFUNCTION(BlueprintCallable, Category = "Gameplay Effect")
 	void ApplyEffectToTarget(AActor* InTargetActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass);
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayEffect")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Effect")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Effect")
+	TSubclassOf<UGameplayEffect> DurationGameplayEffectClass;
 };
