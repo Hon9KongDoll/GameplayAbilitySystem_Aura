@@ -2,6 +2,8 @@
 
 //Engine
 #include "Net/UnrealNetwork.h"
+#include "GameplayEffectExtension.h"
+#include "GameFramework/Character.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -9,6 +11,14 @@ UAuraAttributeSet::UAuraAttributeSet()
 	InitMaxHealth(100.f);
 	InitMana(50.f);
 	InitMaxMana(100.f);
+}
+
+void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	FEffectProperties Props;
+	SetEffectProperties(Data, Props);
 }
 
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -54,4 +64,34 @@ void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxMana, OldMaxMana);
+}
+
+void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
+{
+	// Source = 效果的施加者
+	// Target = 效果的目标 - 此AS的拥有者
+
+	Props.EffectContextHandle = Data.EffectSpec.GetContext();
+
+	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
+
+	if (IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid() && Props.SourceASC->AbilityActorInfo.Get()->AvatarActor.IsValid())
+	{
+		Props.SourceAvatarActor = Props.SourceASC->AbilityActorInfo.Get()->AvatarActor.Get();
+
+		Props.SourceController = Props.SourceASC->AbilityActorInfo.Get()->PlayerController.Get();
+
+		Props.SourceCharacter = Cast<ACharacter>(Props.SourceAvatarActor);
+	}
+
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.TargetASC = Data.Target.AbilityActorInfo.Get()->AbilitySystemComponent.Get();
+
+		Props.TargetAvatarActor = Data.Target.AbilityActorInfo.Get()->AvatarActor.Get();
+
+		Props.TargetController = Data.Target.AbilityActorInfo.Get()->PlayerController.Get();
+
+		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
+	}
 }
