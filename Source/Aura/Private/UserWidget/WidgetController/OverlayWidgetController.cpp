@@ -1,5 +1,6 @@
 #include "UserWidget/WidgetController/OverlayWidgetController.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -29,6 +30,14 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		AuraAttributeSet->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
+
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags)
+		{
+			// 目前该逻辑只能在Standalone模式下触发
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString("EffectApplied"));
+		}
+	);
 }
 
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
