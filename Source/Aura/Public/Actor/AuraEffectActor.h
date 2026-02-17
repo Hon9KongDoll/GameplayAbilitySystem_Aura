@@ -43,6 +43,9 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Effect")
+	float ActorLevel = 1.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Effect")
 	uint8 bDestroyOnEffectRemoval : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Effect")
