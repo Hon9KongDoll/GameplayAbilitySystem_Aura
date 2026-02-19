@@ -8,6 +8,7 @@
 class USkeletalMeshComponent;
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UGameplayEffect;
 
 UCLASS(Abstract)
 class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -26,6 +27,8 @@ protected:
 
 	virtual void InitAbilityActorInfo();
 
+	void InitializePrimaryAttributes();
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Gear")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -35,4 +38,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributesGE;
 };
