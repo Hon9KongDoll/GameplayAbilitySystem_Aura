@@ -60,4 +60,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnMaxManaChangedSignature OnMaxManaChanged;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UDataTable> MessageWidgetDataTable;
 };
