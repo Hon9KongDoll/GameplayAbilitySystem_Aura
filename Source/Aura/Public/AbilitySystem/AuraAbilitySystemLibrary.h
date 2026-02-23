@@ -13,4 +13,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController")
 	static UOverlayWidgetController* GetOverlayWidgetController(const UObject* WorldContextObject);
 
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController")
+	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
+
 };
