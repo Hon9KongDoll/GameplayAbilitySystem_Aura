@@ -26,8 +26,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void InitAbilityActorInfo();
+	
+	// 应用游戏效果到自身
+	void ApplyGameplayEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 
-	void InitializePrimaryAttributes();
+	// 初始化默认属性
+	void InitializeDefaultAttributes();
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Gear")
@@ -39,6 +43,11 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+	// 用于初始化主属性的GE
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributesGE;
+
+	// 用于初始化次属性的GE
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributesGE;
 };
