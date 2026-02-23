@@ -28,6 +28,11 @@ void AAuraEnemy::UnHighLightAcrot()
 	Weapon->SetRenderCustomDepth(false);
 }
 
+int32 AAuraEnemy::GetCharacterLevel_Implementation()
+{
+	return Level;
+}
+
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
