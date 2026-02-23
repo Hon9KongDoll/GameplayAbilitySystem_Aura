@@ -24,7 +24,7 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 
 	OverlapWidget = CreateWidget<UAuraUserWidget>(GetWorld(), OverlapWidgetClass);
 
-	const FWidgetControllerParams WCParams(PC, PS, ASC, AS);
+	FWidgetControllerParams WCParams(PC, PS, ASC, AS);
 
 	OverlapWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
 
