@@ -7,6 +7,7 @@
 class UInputAction;
 class UInputMappingContext;
 class IEnemyInterface;
+class UAuraInputConfig;
 
 struct FInputActionValue;
 
@@ -37,6 +38,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
+
+	// 输入操作关联游戏标签 - 资产表
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UAuraInputConfig> AuraInputConfig;
 
 private:
 	// 暂时编译不过
