@@ -41,7 +41,7 @@ struct FGameplayEffectContext
 
 
 
-#### **GameplayEffect**
+#### GameplayEffect
 
 - **Stacking**
 
@@ -129,10 +129,105 @@ struct FGameplayEffectContext
 
 
 
+#### GameplayAbility
+
+- **Tags**
+
+  - **AssetTags** 
+
+    `给这个 Ability 本身打标签`
+
+  - **CancelAbilitiesWithTag**
+
+    `当前 Ability 被激活时，取消所有带这些标签的 Ability`
+
+  - **BlockAbilitiesWithTag**
+
+    `在当前 Ability 持续期间，禁止激活带这些标签的 Ability`
+
+  - **ActivationOwnedTags**
+
+    `Ability 激活后，给 Owner 添加的标签`
+
+  - **ActivationRequiredTags**
+
+    `必须拥有这些标签才能激活 Ability`
+
+  - **ActivationBlockedTags**
+
+    `如果 Owner 有这些标签，则 Ability 无法激活`
+
+  - **SourceRequiredTags**
+
+    `Source 必须拥有这些标签才可以释放`
+
+  - **SourceBlockedTags**
+
+    `Source 拥有这些标签时，Ability 被禁止`
+
+  - **TargetRequiredTags**
+
+    `目标必须拥有这些标签，Ability 才能作用`
+
+  - **TargetBlockedTags**
+
+    `如果目标有这些标签，则 Ability 不会生效`
+
+- **ReplicateInputDirectly**
+
+  `是否把玩家的输入直接从客户端复制到服务器`
+
+- **ReplicationPolicy**
+
+  - **ReplicateNo - DoNotReplicate**
+
+    `Ability 实例不会复制到客户端`
+
+  - **ReplicateYes - Replicate**
+
+    `Ability 实例会复制到 Owner 客户端`
+
+- **InstancingPolicy**
+
+  - **InstancedPerActor**
+
+    `该 Ability 创建一个单独的实例，并在每次激活时复用这个实例`
+
+    `可以存储持久数据 / 变量需要在每次使用前手动重置`
+
+  - **InstancedPerExecution**
+
+    `每次激活 Ability 时都会创建一个新的实例`
+
+    `不会在多次激活之间保存数据`
+
+  - **NonInstanced**
+
+    `不创建实例，仅使用类默认对象`
+
+    `无法存储状态 / 无法绑定 Ability Task 的委托`
+
+- **NetExecutionPolicy**
+
+  - **LocalOnly**
+
+    `只在本地客户端执行，服务器不会运行这个 Ability`
+
+  - **LocalPredicted**
+
+    `客户端先本地预测执行，然后发送到服务器，服务器再执行并校正结果`
+
+  - **ServerOnly**
+
+    `只在服务器执行，客户端只是发起请求`
+
+  - **ServerInitiated**
+
+    `由服务器先执行，然后同步到拥有该 Ability 的客户端执行`
+
+
 
 #### 功能流程：
-
-
 
 ##### 初始化属性
 

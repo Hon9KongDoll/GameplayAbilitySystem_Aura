@@ -10,6 +10,7 @@ class USkeletalMeshComponent;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
+class UGameplayAbility;
 
 UCLASS(Abstract)
 class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -34,6 +35,9 @@ protected:
 	// 初始化默认属性
 	void InitializeDefaultAttributes();
 
+	// 添加角色初始技能
+	void AddCharacterStartupAbility();
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Gear")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -51,4 +55,8 @@ protected:
 	// 用于初始化次属性的GE
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributesGE;
+
+	// 初始技能
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 };

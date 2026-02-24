@@ -1,7 +1,7 @@
 #include "Character/AuraCharacterBase.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 //Engine
-#include "AbilitySystemComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -39,4 +39,14 @@ void AAuraCharacterBase::InitializeDefaultAttributes()
 	ApplyGameplayEffectToSelf(DefaultPrimaryAttributesGE, 1.f);
 
 	ApplyGameplayEffectToSelf(DefaultSecondaryAttributesGE, 1.f);
+}
+
+void AAuraCharacterBase::AddCharacterStartupAbility()
+{
+	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+
+	// 服务器添加角色能力，同步到客户端
+	if (!HasAuthority()) return;
+
+	AuraAbilitySystemComponent->AddCharacterAbility(StartupAbilities);
 }

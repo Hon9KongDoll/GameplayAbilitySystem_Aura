@@ -14,6 +14,9 @@ class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	void AbilityActorInfoSet();
 
+	// 添加角色能力
+	void AddCharacterAbility(const TArray<TSubclassOf<UGameplayAbility>>& GameplayAbilities);
+
 protected:
 	void EffectApplied(UAbilitySystemComponent* InAbilitySystemComponent, const FGameplayEffectSpec& InEffectSpec, FActiveGameplayEffectHandle InActiveEffectHandle);
 
