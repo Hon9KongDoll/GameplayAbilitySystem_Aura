@@ -7,16 +7,16 @@
 
 class UInputAction;
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FAuraInputAction
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UInputAction> InputAction = nullptr;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag InputTag = FGameplayTag();
 };
 
@@ -29,8 +29,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	const UInputAction* FindInputActionByGameplayTag(const FGameplayTag& GameplayTag, bool bLogNotFound = true) const;
 
-private:
+public:
 	// 输入操作关联游戏标签数据
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FAuraInputAction> AbilityInputAction;
 };

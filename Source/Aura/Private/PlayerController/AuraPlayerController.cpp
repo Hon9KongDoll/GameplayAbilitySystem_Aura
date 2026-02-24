@@ -1,5 +1,7 @@
 #include "PlayerController/AuraPlayerController.h"
 #include "Interface/EnemyInterface.h"
+#include "Input/AuraInputComponent.h"
+
 
 //Engine
 #include "EnhancedInputSubsystems.h"
@@ -44,12 +46,9 @@ void AAuraPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	// 使用的增强输入将输入组件获取
-	// 该转换如果失败触发断言
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
-	
-	// 绑定输入动作到函数
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
+	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	AuraInputComponent->BindAbilityAction(AuraInputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
 void AAuraPlayerController::CursorTrace()
@@ -137,4 +136,19 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 		//输入中X是水平轴AD
 		ControlledPawn->AddMovementInput(RightDirction, InputAxisVector.X);
 	}
+}
+
+void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString("AbilityInputTagPressed - ") + InputTag.ToString());
+}
+
+void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString("AbilityInputTagReleased - ") + InputTag.ToString());
+}
+
+void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString("AbilityInputTagHeld - ") + InputTag.ToString());
 }
