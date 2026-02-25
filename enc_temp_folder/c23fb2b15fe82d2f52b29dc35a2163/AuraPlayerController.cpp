@@ -150,7 +150,7 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("AbilityInputTagPressed - ") + InputTag.ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("AbilityInputTagPressed - ") + InputTag.ToString());
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)

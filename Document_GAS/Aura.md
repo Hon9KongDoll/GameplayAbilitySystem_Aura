@@ -1,6 +1,16 @@
 
 
 ```c++
+class UAbilitySystemComponent
+{
+    // 获取当前可激活能力列表
+    GetActivatableAbilities()
+}
+```
+
+
+
+```c++
 struct FGameplayTag
 {
     /**
