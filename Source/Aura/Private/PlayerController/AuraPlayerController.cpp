@@ -2,6 +2,7 @@
 #include "Interface/EnemyInterface.h"
 #include "Input/AuraInputComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 
 //Engine
 #include "EnhancedInputSubsystems.h"
@@ -9,7 +10,15 @@
 
 AAuraPlayerController::AAuraPlayerController()
 {
-	bReplicates = true; 
+	bReplicates = true;
+	bTargeting = false;
+	bAutoRunning = false;
+
+	FollowTime = 0.f;
+	ShortPressThreshold = 0.f;
+	AutoRunAcceptanceRadius = 50.f;
+
+	CacheDestination = FVector::ZeroVector;
 }
 
 void AAuraPlayerController::PlayerTick(float DeltaTime)
@@ -151,6 +160,13 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("AbilityInputTagPressed - ") + InputTag.ToString());
+
+	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	{
+		// 处理目标锁定状态
+		bTargeting = ThisActor != nullptr ? true : false;
+		bAutoRunning = false;
+	}
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
@@ -167,8 +183,40 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString("AbilityInputTagHeld - ") + InputTag.ToString());
 
+	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	{
+		if (bTargeting)
+		{
+			// 目标锁定状态 - 释放技能
+			if (GetAuraAbilitySystemComponent())
+			{
+				GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
+			}
+		}
+		else
+		{
+			// 累加跟随时间
+			FollowTime += GetWorld()->GetDeltaSeconds();
+
+			FHitResult HitResult;
+			if (GetHitResultUnderCursor(ECC_Visibility, false, HitResult))
+			{
+				CacheDestination = HitResult.ImpactPoint;
+			}
+
+			if (APawn* ControllerPawn = GetPawn())
+			{
+				// 计算移动方向
+				const FVector WorldDirection = (CacheDestination - ControllerPawn->GetActorLocation()).GetSafeNormal();
+				ControllerPawn->AddMovementInput(WorldDirection);
+			}
+		}
+
+		return;
+	}
+
 	if (GetAuraAbilitySystemComponent())
 	{
-		AuraAbilitySystemComponent->AbilityInputTagHeld(InputTag);
+		GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 	}
 }

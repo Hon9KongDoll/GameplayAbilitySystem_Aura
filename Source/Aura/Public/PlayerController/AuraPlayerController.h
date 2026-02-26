@@ -61,4 +61,18 @@ private:
 
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
+
+	// 缓存目的地
+	FVector CacheDestination;
+	// 跟随时间
+	float FollowTime;
+	// 短按阈值
+	float ShortPressThreshold;
+	// 目标锁定状态
+	uint8 bTargeting : 1;
+	// 自动奔跑开关
+	uint8 bAutoRunning : 1;
+	// 自动奔跑判定范围
+	UPROPERTY(EditDefaultsOnly)
+	float AutoRunAcceptanceRadius;
 };
