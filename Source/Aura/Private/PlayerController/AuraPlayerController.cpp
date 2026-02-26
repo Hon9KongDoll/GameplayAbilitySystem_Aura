@@ -19,7 +19,7 @@ AAuraPlayerController::AAuraPlayerController()
 
 	FollowTime = 0.f;
 	ShortPressThreshold = 0.5f;
-	AutoRunAcceptanceRadius = 50.f;
+	AutoRunAcceptanceRadius = 5.f;
 
 	CacheDestination = FVector::ZeroVector;
 
@@ -31,6 +31,8 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	CursorTrace();
+	
+	AutoRun();
 }
 
 UAuraAbilitySystemComponent* AAuraPlayerController::GetAuraAbilitySystemComponent()
@@ -138,6 +140,25 @@ void AAuraPlayerController::CursorTrace()
 	}
 }
 
+void AAuraPlayerController::AutoRun()
+{
+	if (!bAutoRunning) return;
+
+	if (APawn* ControllerPawn = GetPawn<APawn>())
+	{
+		const FVector LocationOnSpline = SplineComponent->FindLocationClosestToWorldLocation(ControllerPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector DirectionOnSpline = SplineComponent->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+
+		ControllerPawn->AddMovementInput(DirectionOnSpline);
+
+		const float DistanceToDestination = (LocationOnSpline - CacheDestination).Length();
+		if (DistanceToDestination <= AutoRunAcceptanceRadius)
+		{
+			bAutoRunning = false;
+		}
+	}
+}
+
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
@@ -196,6 +217,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 			{
 				// FindPathToLocationSynchronously:
 				// 从起点到目标点立即计算一条NavMesh路径并返回路径对象
+				// PlayerAsClient模式：ProjectSetting - NavigationSystem - AllowClientSideNavigation = true
 				if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControllerPawn->GetActorLocation(), CacheDestination))
 				{
 					SplineComponent->ClearSplinePoints();
@@ -203,8 +225,14 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 					for (const FVector& Point : NavigationPath->PathPoints)
 					{
 						SplineComponent->AddSplinePoint(Point, ESplineCoordinateSpace::World);
+					}
 
-						DrawDebugSphere(GetWorld(), Point, 8.f, 8, FColor::MakeRandomColor(), false, 5.f);
+					if (NavigationPath->PathPoints.Num() > 0)
+					{
+						// 解决角色无法到达的位置导致无限移动，使用上一个更接近的点作为目的地
+						CacheDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
+
+						bAutoRunning = true;
 					}
 				}
 			}

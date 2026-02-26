@@ -36,6 +36,9 @@ private:
 	// 光标跟踪
 	void CursorTrace();
 
+	// 自动奔跑
+	void AutoRun();
+
 	void Move(const FInputActionValue& InputActionValue);
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);
