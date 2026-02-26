@@ -5,8 +5,11 @@
 #include "AuraGameplayTags.h"
 
 //Engine
+#include "NavigationPath.h"
+#include "NavigationSystem.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Components/SplineComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -15,10 +18,12 @@ AAuraPlayerController::AAuraPlayerController()
 	bAutoRunning = false;
 
 	FollowTime = 0.f;
-	ShortPressThreshold = 0.f;
+	ShortPressThreshold = 0.5f;
 	AutoRunAcceptanceRadius = 50.f;
 
 	CacheDestination = FVector::ZeroVector;
+
+	SplineComponent = CreateDefaultSubobject<USplineComponent>("SplineComponent");
 }
 
 void AAuraPlayerController::PlayerTick(float DeltaTime)
@@ -173,9 +178,47 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString("AbilityInputTagReleased - ") + InputTag.ToString());
 
+	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	{
+		if (bTargeting)
+		{
+			// 目标锁定状态 - 释放技能
+			if (GetAuraAbilitySystemComponent())
+			{
+				GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
+			}
+		}
+		else
+		{
+			APawn* ControllerPawn = GetPawn();
+
+			if (ControllerPawn && FollowTime <= ShortPressThreshold)
+			{
+				// FindPathToLocationSynchronously:
+				// 从起点到目标点立即计算一条NavMesh路径并返回路径对象
+				if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControllerPawn->GetActorLocation(), CacheDestination))
+				{
+					SplineComponent->ClearSplinePoints();
+
+					for (const FVector& Point : NavigationPath->PathPoints)
+					{
+						SplineComponent->AddSplinePoint(Point, ESplineCoordinateSpace::World);
+
+						DrawDebugSphere(GetWorld(), Point, 8.f, 8, FColor::MakeRandomColor(), false, 5.f);
+					}
+				}
+			}
+		}
+
+		bTargeting = false;
+		FollowTime = 0.f;
+
+		return;
+	}
+
 	if (GetAuraAbilitySystemComponent())
 	{
-		AuraAbilitySystemComponent->AbilityInputTagReleased(InputTag);
+		GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 	}
 }
 

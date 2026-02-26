@@ -5,10 +5,12 @@
 #include "GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
+
 class UInputAction;
-class UInputMappingContext;
 class IEnemyInterface;
+class USplineComponent;
 class UAuraInputConfig;
+class UInputMappingContext;
 
 struct FInputActionValue;
 
@@ -50,6 +52,9 @@ protected:
 	// 输入操作关联游戏标签 - 资产表
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UAuraInputConfig> AuraInputConfig;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<USplineComponent> SplineComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
