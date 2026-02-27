@@ -27,6 +27,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/** Combat Interface */
+	virtual FVector GetCombatSocketLocation_Implementation() override;
+	/** end Combat Interface */
+
 	virtual void InitAbilityActorInfo();
 	
 	// 应用游戏效果到自身
@@ -39,7 +43,10 @@ protected:
 	void AddCharacterStartupAbility();
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Gear")
+	UPROPERTY(EditAnywhere)
+	FName WeaponTipSocketName;
+
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	UPROPERTY()
