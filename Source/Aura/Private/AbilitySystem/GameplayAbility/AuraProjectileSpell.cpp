@@ -17,9 +17,6 @@ void UAuraProjectileSpell::SpawnProjectile()
 {
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
 
-	// 用于生成前可修改 Actor
-	// 且要调用 FinishSpawningActor
-
 	FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
 
 	FTransform SpawnTransform;
@@ -27,6 +24,8 @@ void UAuraProjectileSpell::SpawnProjectile()
 
 	if (ProjectileClass == nullptr) return;
 
+	// SpawnActorDeferred
+	// 创建一个未完成的 Actor，先进行配置，再手动完成生成(FinishSpawning)
 	AProjectileActor* ProjectileActor = GetWorld()->SpawnActorDeferred<AProjectileActor>(
 		ProjectileClass,
 		SpawnTransform,
