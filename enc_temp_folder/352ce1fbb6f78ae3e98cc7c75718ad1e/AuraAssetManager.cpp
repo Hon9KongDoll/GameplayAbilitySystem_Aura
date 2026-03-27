@@ -1,9 +1,6 @@
 #include "AuraAssetManager.h"
 #include "AuraGameplayTags.h"
 
-//Engine
-#include "AbilitySystemGlobals.h"
-
 UAuraAssetManager& UAuraAssetManager::Get()
 {
 	check(GEngine);
@@ -18,6 +15,4 @@ void UAuraAssetManager::StartInitialLoading()
 	Super::StartInitialLoading();
 
 	FAuraGameplayTags::InitializeNativeGameplayTags();
-
-	UAbilitySystemGlobals::
 }

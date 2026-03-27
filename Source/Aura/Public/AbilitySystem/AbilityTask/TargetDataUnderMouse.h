@@ -21,6 +21,8 @@ protected:
 private:
 	void SendMouseCurorData();
 
+	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle, FGameplayTag ActivationGameplayTag);
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FMouseTargetDataSignature MouseTargetDataDelegate;

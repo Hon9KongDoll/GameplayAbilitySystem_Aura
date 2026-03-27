@@ -2,6 +2,36 @@
 
 //Engine
 #include "AbilitySystemComponent.h"
+#include "Abilities/GameplayAbilityTargetTypes.h"
+
+/* {@ 整体执行流程
+
+	客户端：
+	Activate()
+		↓
+	SendMouseCursorData()
+		↓
+	FScopedPredictionWindow（开启预测）
+		↓
+	获取鼠标HitResult
+		↓
+	ServerSetReplicatedTargetData（发给服务器）
+		↓
+	本地直接 Broadcast（客户端预测）
+
+	服务器：
+	Activate()
+		↓
+	注册 Delegate 等数据
+		↓
+	收到 TargetData
+		↓
+	OnTargetDataReplicatedCallback()
+		↓
+	Broadcast（服务器执行）
+
+	@}
+*/
 
 UTargetDataUnderMouse* UTargetDataUnderMouse::CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility)
 {
@@ -22,6 +52,20 @@ void UTargetDataUnderMouse::Activate()
 	else
 	{
 		// TODO: We are on the server, so listen for target data.
+
+		const FGameplayAbilitySpecHandle AbilitySpecHandle = GetAbilitySpecHandle();
+
+		const FPredictionKey PredictionKey = GetActivationPredictionKey();
+
+		// 当这个 Ability + PredictionKey 的 TargetData 到达时，调用回调函数
+		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(AbilitySpecHandle, PredictionKey).AddUObject(this, &ThisClass::OnTargetDataReplicatedCallback);
+
+		// 尝试立即触发：如果数据已经提前到了，直接执行回调；如果还没到，进入等待
+		if (!AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(AbilitySpecHandle, PredictionKey))
+		{
+			// 等待客户端数据
+			SetWaitingOnRemotePlayerData();
+		}
 	}
 }
 
@@ -55,6 +99,16 @@ void UTargetDataUnderMouse::SendMouseCurorData()
 		AbilitySystemComponent->ScopedPredictionKey);
 
 	// 判断当前 AbilityTask 是否安全且应该触发委托
+	if (ShouldBroadcastAbilityTaskDelegates())
+	{
+		MouseTargetDataDelegate.Broadcast(TargetDataHandle);
+	}
+}
+
+void UTargetDataUnderMouse::OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle, FGameplayTag ActivationGameplayTag)
+{
+	AbilitySystemComponent->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());
+
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{
 		MouseTargetDataDelegate.Broadcast(TargetDataHandle);
