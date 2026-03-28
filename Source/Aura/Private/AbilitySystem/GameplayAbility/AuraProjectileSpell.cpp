@@ -2,25 +2,26 @@
 #include "Interface/CombatInterface.h"
 #include "Actor/ProjectileActor.h"
 
-
 //Engine
 #include "Kismet/KismetSystemLibrary.h"
 
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	SpawnProjectile();
 }
 
-void UAuraProjectileSpell::SpawnProjectile()
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
 
 	FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
 
+	FRotator Rotator = (ProjectileTargetLocation - SpawnLocation).Rotation();
+	Rotator.Pitch = 0.f;
+
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SpawnLocation);
+	SpawnTransform.SetRotation(Rotator.Quaternion());
 
 	if (ProjectileClass == nullptr) return;
 

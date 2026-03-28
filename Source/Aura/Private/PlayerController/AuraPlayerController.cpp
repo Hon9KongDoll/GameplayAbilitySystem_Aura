@@ -16,6 +16,7 @@ AAuraPlayerController::AAuraPlayerController()
 	bReplicates = true;
 	bTargeting = false;
 	bAutoRunning = false;
+	bShiftKeyDown = false;
 
 	FollowTime = 0.f;
 	ShortPressThreshold = 0.5f;
@@ -74,6 +75,8 @@ void AAuraPlayerController::SetupInputComponent()
 
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	AuraInputComponent->BindAbilityAction(AuraInputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
@@ -199,66 +202,68 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString("AbilityInputTagReleased - ") + InputTag.ToString());
 
-	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	// 执行非鼠标左键关联技能
+	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (bTargeting)
+		if (GetAuraAbilitySystemComponent())
 		{
-			// 目标锁定状态 - 释放技能
-			if (GetAuraAbilitySystemComponent())
-			{
-				GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
-			}
+			GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 		}
-		else
-		{
-			APawn* ControllerPawn = GetPawn();
-
-			if (ControllerPawn && FollowTime <= ShortPressThreshold)
-			{
-				// FindPathToLocationSynchronously:
-				// 从起点到目标点立即计算一条NavMesh路径并返回路径对象
-				// PlayerAsClient模式：ProjectSetting - NavigationSystem - AllowClientSideNavigation = true
-				if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControllerPawn->GetActorLocation(), CacheDestination))
-				{
-					SplineComponent->ClearSplinePoints();
-
-					for (const FVector& Point : NavigationPath->PathPoints)
-					{
-						SplineComponent->AddSplinePoint(Point, ESplineCoordinateSpace::World);
-					}
-
-					if (NavigationPath->PathPoints.Num() > 0)
-					{
-						// 解决角色无法到达的位置导致无限移动，使用上一个更接近的点作为目的地
-						CacheDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
-
-						bAutoRunning = true;
-					}
-				}
-			}
-		}
-
-		bTargeting = false;
-		FollowTime = 0.f;
 
 		return;
 	}
 
+	// 执行鼠标左键关联技能
 	if (GetAuraAbilitySystemComponent())
 	{
 		GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
+	}
+
+	// 非目标锁定状态，及非Shift按下状态，执行角色跟随鼠标移动逻辑
+	if (!bTargeting && !bShiftKeyDown)
+	{
+		APawn* ControllerPawn = GetPawn();
+
+		if (ControllerPawn && FollowTime <= ShortPressThreshold)
+		{
+			// FindPathToLocationSynchronously:
+			// 从起点到目标点立即计算一条NavMesh路径并返回路径对象
+			// PlayerAsClient模式：ProjectSetting - NavigationSystem - AllowClientSideNavigation = true
+			if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControllerPawn->GetActorLocation(), CacheDestination))
+			{
+				SplineComponent->ClearSplinePoints();
+
+				for (const FVector& Point : NavigationPath->PathPoints)
+				{
+					SplineComponent->AddSplinePoint(Point, ESplineCoordinateSpace::World);
+				}
+
+				if (NavigationPath->PathPoints.Num() > 0)
+				{
+					// 解决角色无法到达的位置导致无限移动，使用上一个更接近的点作为目的地
+					CacheDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
+
+					bAutoRunning = true;
+				}
+			}
+		}
+
+		FollowTime = 0.f;
+		bTargeting = false;
 	}
 }
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString("AbilityInputTagHeld - ") + InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString("AbilityInputTagReleased - ") + InputTag.ToString());
 
+	// 判断是否为鼠标左键操作
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (bTargeting)
+		// 判断是否为目标锁定状态，或者Shift按键按下状态，执行技能
+		// 否则执行角色跟随鼠标移动
+		if (bTargeting || bShiftKeyDown)
 		{
-			// 目标锁定状态 - 释放技能
 			if (GetAuraAbilitySystemComponent())
 			{
 				GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);

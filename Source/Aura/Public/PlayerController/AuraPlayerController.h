@@ -41,6 +41,9 @@ private:
 
 	void Move(const FInputActionValue& InputActionValue);
 
+	void ShiftPressed() { bShiftKeyDown = true; }
+	void ShiftReleased() { bShiftKeyDown = false; }
+
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
@@ -48,6 +51,9 @@ private:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
@@ -69,6 +75,8 @@ private:
 
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
+
+	uint8 bShiftKeyDown : 1;
 
 	// »º´æÄ¿µÄµØ
 	FVector CacheDestination;
