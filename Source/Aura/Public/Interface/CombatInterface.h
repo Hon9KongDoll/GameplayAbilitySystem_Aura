@@ -20,4 +20,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	FVector GetCombatSocketLocation();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void UpdateFacingTarget(const FVector& FacingTargetLocation);
 };
