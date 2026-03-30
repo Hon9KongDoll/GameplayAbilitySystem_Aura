@@ -1,4 +1,5 @@
 #include "Actor/ProjectileActor.h"
+#include "Aura/Aura.h"
 
 //Engine
 #include "NiagaraFunctionLibrary.h"
@@ -15,6 +16,7 @@ AProjectileActor::AProjectileActor()
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
 	SetRootComponent(SphereComponent);
+	SphereComponent->SetCollisionObjectType(ECC_Projectile);
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	SphereComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Overlap);

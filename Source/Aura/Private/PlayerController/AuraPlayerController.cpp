@@ -207,7 +207,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	{
 		if (GetAuraAbilitySystemComponent())
 		{
-			GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
+			GetAuraAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
 		}
 
 		return;
@@ -216,7 +216,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	// 执行鼠标左键关联技能
 	if (GetAuraAbilitySystemComponent())
 	{
-		GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
+		GetAuraAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
 	}
 
 	// 非目标锁定状态，及非Shift按下状态，执行角色跟随鼠标移动逻辑
