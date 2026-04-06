@@ -63,6 +63,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributesGE;
 
+	// 用于初始化至关重要属性的GE
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributesGE;
+
 	// 初始技能
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
