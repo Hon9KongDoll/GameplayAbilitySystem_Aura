@@ -4,8 +4,10 @@
 //Engine
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "AbilitySystemComponent.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 AProjectileActor::AProjectileActor()
@@ -67,6 +69,11 @@ void AProjectileActor::SphereComponentBeginOverlap(UPrimitiveComponent* Overlapp
 
 	if (HasAuthority())
 	{
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		{
+			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		}
+
 		Destroy();
 	}
 	else

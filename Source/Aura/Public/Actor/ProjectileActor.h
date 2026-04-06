@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayEffectTypes.h"
 #include "ProjectileActor.generated.h"
 
 class UNiagaraSystem;
@@ -23,6 +24,11 @@ protected:
 
 	UFUNCTION()
 	void SphereComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+public:
+	// ÉËº¦Ð§¹û¹æ·¶¾ä±ú
+	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
+	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

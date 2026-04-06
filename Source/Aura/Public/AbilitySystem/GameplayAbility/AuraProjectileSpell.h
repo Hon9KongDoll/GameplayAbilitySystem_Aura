@@ -18,6 +18,11 @@ protected:
 	void SpawnProjectile(const FVector& ProjectileTargetLocation);
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
+	// 投射物对象类
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AProjectileActor> ProjectileClass;
+
+	// 投射物关联的伤害效果类
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

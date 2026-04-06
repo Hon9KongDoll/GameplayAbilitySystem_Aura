@@ -3,7 +3,9 @@
 #include "Actor/ProjectileActor.h"
 
 //Engine
+#include "AbilitySystemComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -35,6 +37,10 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	//TODO: 为该投射物分配一个用于造成伤害的游戏效果规格
-	
+	UAbilitySystemComponent* SorceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+	FGameplayEffectSpecHandle SpecHandle = SorceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SorceASC->MakeEffectContext());
+
+	ProjectileActor->DamageEffectSpecHandle = SpecHandle;
+
 	ProjectileActor->FinishSpawning(SpawnTransform);
 }
