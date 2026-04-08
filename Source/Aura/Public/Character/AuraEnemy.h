@@ -3,7 +3,10 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interface/EnemyInterface.h"
+#include "UserWidget/WidgetController/OverlayWidgetController.h"
 #include "AuraEnemy.generated.h"
+
+class UWidgetComponent;
 
 UCLASS()
 class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
@@ -28,7 +31,18 @@ protected:
 private:
 	virtual void InitAbilityActorInfo() override;
 
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnHealthChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnMaxHealthChanged;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 Level = 1.f;
+
+	// µÐÈËÑªÌõ
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;
 };
