@@ -82,3 +82,7 @@ void AAuraEnemy::InitAbilityActorInfo()
 
 	InitializeDefaultAttributes();
 }
+
+void AAuraEnemy::InitializeDefaultAttributes()
+{
+}

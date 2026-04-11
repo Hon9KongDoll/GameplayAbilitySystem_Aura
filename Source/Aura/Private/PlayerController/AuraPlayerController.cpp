@@ -190,7 +190,7 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("AbilityInputTagPressed - ") + InputTag.ToString());
 
-	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	if (InputTag.MatchesTagExact(AuraInputTag::InputTag_LMB))
 	{
 		// 处理目标锁定状态
 		bTargeting = ThisActor != nullptr ? true : false;
@@ -203,7 +203,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString("AbilityInputTagReleased - ") + InputTag.ToString());
 
 	// 执行非鼠标左键关联技能
-	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	if (!InputTag.MatchesTagExact(AuraInputTag::InputTag_LMB))
 	{
 		if (GetAuraAbilitySystemComponent())
 		{
@@ -258,7 +258,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString("AbilityInputTagReleased - ") + InputTag.ToString());
 
 	// 判断是否为鼠标左键操作
-	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	if (InputTag.MatchesTagExact(AuraInputTag::InputTag_LMB))
 	{
 		// 判断是否为目标锁定状态，或者Shift按键按下状态，执行技能
 		// 否则执行角色跟随鼠标移动

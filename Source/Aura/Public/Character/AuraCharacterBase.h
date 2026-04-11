@@ -37,7 +37,7 @@ protected:
 	void ApplyGameplayEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 
 	// 初始化默认属性
-	void InitializeDefaultAttributes();
+	virtual void InitializeDefaultAttributes();
 
 	// 添加角色初始技能
 	void AddCharacterStartupAbility();

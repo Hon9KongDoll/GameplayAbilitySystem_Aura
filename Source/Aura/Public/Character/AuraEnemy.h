@@ -28,8 +28,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-private:
 	virtual void InitAbilityActorInfo() override;
+
+	virtual void InitializeDefaultAttributes() override;
 
 public:
 	UPROPERTY(BlueprintAssignable)

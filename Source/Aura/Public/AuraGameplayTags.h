@@ -1,57 +1,35 @@
 #pragma once
 
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include "NativeGameplayTags.h"
 
-/**
- * AuraGameplayTags
- *
- * 用于存储原生GameplayTags的单例类
- */
-
-struct FAuraGameplayTags
+namespace AuraPrimaryAttributeTag
 {
-public:
-	static const FAuraGameplayTags& Get() { return GameplayTags; }
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Primary_Strength)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Primary_Intelligence)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Primary_Resilience)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Primary_Vigor)
+}
 
-	static void InitializeNativeGameplayTags();
+namespace AuraSecondaryAttributeTag
+{
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_Armor)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_ArmorPenetration)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_BlockChance)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_CriticalHitChance)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_CriticalHitDamage)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_CriticalHitResistance)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_HealthRegeneration)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_ManaRegeneration)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_MaxHealth)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_MaxMana)
+}
 
-public:
-	/*
-     * Primary Attributes
-     */
-
-	FGameplayTag Attributes_Primary_Strength;
-	FGameplayTag Attributes_Primary_Intelligence;
-	FGameplayTag Attributes_Primary_Resilience;
-	FGameplayTag Attributes_Primary_Vigor;
-
-	/*
-     * Secondary Attributes
-     */
-
-	FGameplayTag Attributes_Secondary_Armor;
-	FGameplayTag Attributes_Secondary_ArmorPenetration;
-	FGameplayTag Attributes_Secondary_BlockChance;
-	FGameplayTag Attributes_Secondary_CriticalHitChance;
-	FGameplayTag Attributes_Secondary_CriticalHitDamage;
-	FGameplayTag Attributes_Secondary_CriticalHitResistance;
-	FGameplayTag Attributes_Secondary_HealthRegeneration;
-	FGameplayTag Attributes_Secondary_ManaRegeneration;
-	FGameplayTag Attributes_Secondary_MaxHealth;
-	FGameplayTag Attributes_Secondary_MaxMana;
-
-	/*
-     * Input Tags
-     */
-
-	FGameplayTag InputTag_LMB;
-	FGameplayTag InputTag_RMB;
-	FGameplayTag InputTag_1;
-	FGameplayTag InputTag_2;
-	FGameplayTag InputTag_3;
-	FGameplayTag InputTag_4;
-
-private:
-	static FAuraGameplayTags GameplayTags;
-};
+namespace AuraInputTag
+{
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_LMB)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_RMB)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_1)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_2)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_3)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_4)
+}
