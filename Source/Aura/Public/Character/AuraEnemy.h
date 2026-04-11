@@ -43,6 +43,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 Level = 1.f;
 
+	// 角色职业
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag CharacterClass;
+
 	// 敌人血条
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;

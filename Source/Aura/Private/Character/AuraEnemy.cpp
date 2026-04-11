@@ -1,6 +1,7 @@
 #include "Character/AuraEnemy.h"
 #include "Aura/Aura.h"
 #include "UserWidget/Widget/AuraUserWidget.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 //Engine
 #include "Components/WidgetComponent.h"
@@ -85,4 +86,9 @@ void AAuraEnemy::InitAbilityActorInfo()
 
 void AAuraEnemy::InitializeDefaultAttributes()
 {
+	// 敌人默认属性表配置到GameMode中，客户端无法获取GameMode
+	if (HasAuthority())
+	{
+		UAuraAbilitySystemLibrary::InitializeCharacterClassDefaultAttributes(this, AbilitySystemComponent, CharacterClass, Level);
+	}
 }

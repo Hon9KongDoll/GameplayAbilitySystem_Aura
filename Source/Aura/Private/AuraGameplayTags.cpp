@@ -31,3 +31,10 @@ namespace AuraInputTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_3, FName{ TEXTVIEW("InputTag.3") })
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_4, FName{ TEXTVIEW("InputTag.4") })
 }
+
+namespace AuraCharacterClassTag
+{
+	UE_DEFINE_GAMEPLAY_TAG(CharacterClass_Elementalist, FName{ TEXTVIEW("CharacterClass.Elementalist") })
+	UE_DEFINE_GAMEPLAY_TAG(CharacterClass_Ranger, FName{ TEXTVIEW("CharacterClass.Ranger") })
+	UE_DEFINE_GAMEPLAY_TAG(CharacterClass_Warrior, FName{ TEXTVIEW("CharacterClass.Warrior") })
+}

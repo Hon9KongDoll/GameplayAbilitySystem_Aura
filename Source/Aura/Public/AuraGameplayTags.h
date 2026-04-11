@@ -33,3 +33,10 @@ namespace AuraInputTag
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_3)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_4)
 }
+
+namespace AuraCharacterClassTag
+{
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(CharacterClass_Elementalist)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(CharacterClass_Ranger)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(CharacterClass_Warrior)
+}
