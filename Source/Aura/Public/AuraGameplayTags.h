@@ -24,6 +24,11 @@ namespace AuraSecondaryAttributeTag
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Secondary_MaxMana)
 }
 
+namespace AuraDamageTag
+{
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage)
+}
+
 namespace AuraInputTag
 {
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_LMB)

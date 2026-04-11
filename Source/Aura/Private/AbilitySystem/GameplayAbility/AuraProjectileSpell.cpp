@@ -1,6 +1,7 @@
 #include "AbilitySystem/GameplayAbility/AuraProjectileSpell.h"
-#include "Interface/CombatInterface.h"
+#include "AuraGameplayTags.h"
 #include "Actor/ProjectileActor.h"
+#include "Interface/CombatInterface.h"
 
 //Engine
 #include "AbilitySystemComponent.h"
@@ -39,6 +40,9 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	//TODO: 为该投射物分配一个用于造成伤害的游戏效果规格
 	UAbilitySystemComponent* SorceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 	FGameplayEffectSpecHandle SpecHandle = SorceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SorceASC->MakeEffectContext());
+
+	// 给一个 Gameplay Effect Spec 动态写入一个 “SetByCaller 数值”，并用 GameplayTag 作为 Key
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AuraDamageTag::Damage, 50.f);
 
 	ProjectileActor->DamageEffectSpecHandle = SpecHandle;
 

@@ -22,6 +22,11 @@ namespace AuraSecondaryAttributeTag
 	UE_DEFINE_GAMEPLAY_TAG(Attribute_Secondary_MaxMana, FName{ TEXTVIEW("Attribute.Secondary.MaxMana") })
 }
 
+namespace AuraDamageTag
+{
+	UE_DEFINE_GAMEPLAY_TAG(Damage, FName{ TEXTVIEW("Damage") })
+}
+
 namespace AuraInputTag
 {
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_LMB, FName{ TEXTVIEW("InputTag.LMB") })
