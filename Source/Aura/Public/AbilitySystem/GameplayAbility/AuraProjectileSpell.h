@@ -18,6 +18,10 @@ protected:
 	void SpawnProjectile(const FVector& ProjectileTargetLocation);
 
 protected:
+	// 关联伤害曲线：等级映射数值
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FScalableFloat Damage;
+
 	// 投射物对象类
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AProjectileActor> ProjectileClass;

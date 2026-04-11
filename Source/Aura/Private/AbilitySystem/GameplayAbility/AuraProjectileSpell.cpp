@@ -41,8 +41,11 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	UAbilitySystemComponent* SorceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 	FGameplayEffectSpecHandle SpecHandle = SorceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SorceASC->MakeEffectContext());
 
+	// 通过能力等级获取曲线中的伤害值
+	const float ScalableDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+
 	// 给一个 Gameplay Effect Spec 动态写入一个 “SetByCaller 数值”，并用 GameplayTag 作为 Key
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AuraDamageTag::Damage, 50.f);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AuraDamageTag::Damage, ScalableDamage);
 
 	ProjectileActor->DamageEffectSpecHandle = SpecHandle;
 
