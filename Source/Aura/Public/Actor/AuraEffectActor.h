@@ -11,15 +11,20 @@ class UAbilitySystemComponent;
 UENUM(BlueprintType)
 enum class EEffectApplicationPolicy : uint8
 {
+	// 开始重叠时应用
 	ApplyOnBeginOverlap,
+	// 结束重叠时应用
 	ApplyOnEndOverlap,
+	// 不应用
 	DoNotApply
 };
 
 UENUM(BlueprintType)
 enum class EEffectRemovalPolicy : uint8
 {
+	// 结束重叠时移除
 	RemoveOnEndOverlap,
+	// 不移除
 	DoNotRemove
 };
 
