@@ -9,7 +9,11 @@ AAuraCharacterBase::AAuraCharacterBase()
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
-	PawnExtComponent = CreateDefaultSubobject<UAuraPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
+	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	PawnExtensionComponent = CreateDefaultSubobject<UAuraPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 }
 
 void AAuraCharacterBase::PreInitializeComponents()
