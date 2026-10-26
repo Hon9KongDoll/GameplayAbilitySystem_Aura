@@ -1,6 +1,9 @@
 #include "AuraPawnExtensionComponent.h"
 #include "Aura/AuraGameplayTags.h"
 
+//Engine
+#include "Components/GameFrameworkComponentDelegates.h"
+
 const FName UAuraPawnExtensionComponent::NAME_ActorFeatureName("PawnExtension");
 
 void UAuraPawnExtensionComponent::BeginPlay()
@@ -13,6 +16,44 @@ void UAuraPawnExtensionComponent::BeginPlay()
 	// 通知系统生成阶段已完成，然后继续尝试执行后续初始化流程。
 	ensure(TryToChangeInitState(AuraGameplayTags::InitState_Spawned));
 	CheckDefaultInitialization();
+}
+
+bool UAuraPawnExtensionComponent::CanChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const
+{
+	check(Manager);
+
+	APawn* Pawn = GetPawn<APawn>();
+
+	if (!CurrentState.IsValid() && DesiredState == AuraGameplayTags::InitState_Spawned)
+	{
+		// 只要我们处于有效的 Pawn 上，就视为已完成生成。
+		if (Pawn)
+		{
+			return true;
+		}
+	}
+	else if (CurrentState == AuraGameplayTags::InitState_Spawned && DesiredState == AuraGameplayTags::InitState_DataAvailable)
+	{
+
+	}
+
+	return false;
+}
+
+void UAuraPawnExtensionComponent::HandleChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState)
+{
+}
+
+void UAuraPawnExtensionComponent::OnActorInitStateChanged(const FActorInitStateChangedParams& Params)
+{
+	// 如果另一个功能现在已进入 DataAvailable 状态，则检查是否应转换到 DataInitialized 状态。
+	if (Params.FeatureName != NAME_ActorFeatureName)
+	{
+		if (Params.FeatureState == AuraGameplayTags::InitState_DataAvailable)
+		{
+			CheckDefaultInitialization();
+		}
+	}
 }
 
 void UAuraPawnExtensionComponent::CheckDefaultInitialization()
