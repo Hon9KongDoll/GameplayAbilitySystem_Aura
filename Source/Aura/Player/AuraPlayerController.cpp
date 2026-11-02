@@ -25,6 +25,8 @@ void AAuraPlayerController::BeginPlay()
 
 	check(Subsystem);
 
+	Subsystem->AddMappingContext(AuraInputMappingContext, 0);
+	
 	bShowMouseCursor = true;
 
 	FInputModeGameAndUI InputModeGameAndUI;
