@@ -1,9 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class UInputAction;
 class UInputMappingContext;
 
 UCLASS()
@@ -16,8 +18,15 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 
 private:
+	void Input_Move(const FInputActionValue& InputActionValue);
+	
+private:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UInputAction> Move_InputAction;
+	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputMappingContext> AuraInputMappingContext;
 };
