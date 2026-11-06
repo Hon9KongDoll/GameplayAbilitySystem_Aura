@@ -11,7 +11,9 @@
 			"AdditionalDependencies": [
 				"ModularGameplay",
 				"Engine",
-				"GameplayAbilities"
+				"GameplayAbilities",
+				"UMG",
+				"CoreUObject"
 			]
 		}
 	],
