@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "AuraWidgetController.h"
+#include "GameplayEffectTypes.h"
 #include "OverlayWidgetController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangeSignature, float, NewValue);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangeSignature, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangeSignature, const float&, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangeSignature, const float&, NewValue);
 
 UCLASS(Blueprintable)
 class AURA_API UOverlayWidgetController : public UAuraWidgetController
@@ -14,6 +15,11 @@ class AURA_API UOverlayWidgetController : public UAuraWidgetController
 
 public:
 	virtual void BroadcastInitialValues() override;
+	virtual void BindCallbacksToDependencies() override;
+
+private:
+	void HealthChange(const FOnAttributeChangeData& Data) const;
+	void MaxHealthChange(const FOnAttributeChangeData& Data) const;
 
 public:
 	UPROPERTY(BlueprintAssignable)
