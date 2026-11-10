@@ -1,5 +1,6 @@
 #include "AuraCharacter.h"
 #include "Aura/Player/AuraPlayerState.h"
+#include "Aura/UI/HUD/AuraHUD.h"
 
 // Engine
 #include "AbilitySystemComponent.h"
@@ -46,4 +47,12 @@ void AAuraCharacter::InitializeAbilitySystemComponent()
 	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
 	AuraAbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AuraAttributeSet = AuraPlayerState->GetAttributeSet();
+
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		if (AAuraHUD* AuraHUD = Cast<AAuraHUD>(PC->GetHUD()))
+		{
+			AuraHUD->InitializeOverlayWidget(PC, AuraPlayerState, AuraAbilitySystemComponent, AuraAttributeSet);
+		}
+	}
 }
