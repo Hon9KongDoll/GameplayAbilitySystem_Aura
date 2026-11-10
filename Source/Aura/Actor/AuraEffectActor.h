@@ -20,5 +20,5 @@ protected:
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayEffect> InstantGameplayEffect;
+	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
 };
